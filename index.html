@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To My Beautiful Girlfriend Ksesha</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to bottom, #fff5f8, #ffeef4);
+            color: #444;
+            overflow-x: hidden;
+        }
+
+        #password-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 245, 248, 0.98);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        #password-overlay h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3em;
+            color: #d6336c;
+            margin-bottom: 30px;
+        }
+        #password-input {
+            padding: 15px;
+            font-size: 1.8em;
+            width: 320px;
+            max-width: 85%;
+            border: 2px solid #d6336c;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            outline: none;
+            letter-spacing: 10px;
+            font-family: monospace;
+        }
+        #password-submit {
+            padding: 14px 40px;
+            font-size: 1.4em;
+            background: #d6336c;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-family: 'Playfair Display', serif;
+        }
+        #error-message {
+            color: #d6336c;
+            margin-top: 20px;
+            font-size: 1.3em;
+        }
+
+        #game-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 245, 248, 0.98);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9998;
+        }
+        #game-container {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        #basket {
+            position: absolute;
+            bottom: 20px;
+            width: 80px;
+            height: 60px;
+            background: #d6336c;
+            border-radius: 50% 50% 10px 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            transition: left 0.1s;
+            font-size: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .falling-heart {
+            position: absolute;
+            font-size: 40px;
+            animation: fall linear;
+        }
+        @keyframes fall {
+            0% { top: -50px; }
+            100% { top: 550px; }
+        }
+        #game-message {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+            color: #d6336c;
+            margin-bottom: 20px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #score {
+            font-size: 1.5em;
+            color: #d6336c;
+            margin-bottom: 10px;
+        }
+
+        #background-music {
+            position: fixed;
+            left: -9999px;
+            top: -9999px;
+            visibility: hidden;
+        }
+
+        #content, #gallery-section {
+            display: none;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5em;
+            color: #d6336c;
+            text-shadow: 2px 2px 15px rgba(0,0,0,0.1);
+            margin: 0.2em 0;
+        }
+
+        .bg_heart {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+        .heart {
+            position: absolute;
+            background: rgba(214, 51, 108, 0.6);
+            transform: rotate(-45deg);
+            animation: float 15s linear infinite;
+        }
+        .heart:before, .heart:after {
+            content: "";
+            position: absolute;
+            width: 100%; height: 100%;
+            background: inherit;
+            border-radius: 50%;
+        }
+        .heart:before { top: -50%; left: 0; }
+        .heart:after { left: 50%; top: 0; }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(-45deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100px) rotate(-45deg); opacity: 0; }
+        }
+
+        section {
+            padding: 80px 20px;
+            text-align: center;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .typing {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+            color: #d6336c;
+            border-right: 3px solid #d6336c;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: blink 0.8s infinite;
+        }
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        #favourite-section {
+            padding: 60px 20px;
+        }
+        .favourite-cards {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .card {
+            perspective: 1000px;
+            width: 280px;
+            height: 380px;
+            cursor: pointer;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .card-front {
+            background: linear-gradient(135deg, #ff9ecf, #d6336c);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2em;
+        }
+        .card-back {
+            background: white;
+            color: #d6336c;
+            transform: rotateY(180deg);
+            font-size: 1.3em;
+            line-height: 1.7;
+            overflow-y: auto;
+        }
+
+        .gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 60px;
+        }
+        .gallery img {
+            width: 320px;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+            transition: transform 0.5s ease;
+        }
+        .gallery img:hover {
+            transform: scale(1.08);
+        }
+
+        footer {
+            padding: 60px;
+            background: #d6336c;
+            color: white;
+            font-size: 1.6em;
+            font-family: 'Playfair Display', serif;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 3.5em; }
+            .card { width: 90%; max-width: 300px; height: 420px; }
+            .card-front { font-size: 2em; }
+            .card-back { font-size: 1.2em; }
+            #game-container { height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="password-overlay">
+        <h2>Enter Password 💕</h2>
+        <input type="text" id="password-input" placeholder="">
+        <button type="button" id="password-submit">Unlock My Heart</button>
+        <div id="error-message"></div>
+    </div>
+
+    <div id="game-overlay">
+        <div id="game-message">Catch 5 hearts for me, my love! 💕</div>
+        <div id="score">Caught: 0 / 5</div>
+        <div id="game-container">
+            <div id="basket">🧺</div>
+        </div>
+        <p style="margin-top: 20px; font-size: 1.2em; color: #d6336c;">Move the basket with your mouse or finger!</p>
+    </div>
+
+    <audio id="background-music" loop>
+        <source src="https://archive.org/download/one-direction-night-changes_202203/One%20Direction%20-%20Night%20Changes.mp3" type="audio/mpeg">
+    </audio>
+
+    <div id="content">
+        <div class="bg_heart"></div>
+
+        <section id="hero">
+            <h1>Happy 14th Month Anniversary</h1>
+            <h2 style="font-size: 3.2em; margin: 20px 0; color: #d6336c;">To My Beautiful Girlfriend Ksesha 💕</h2>
+            <p class="typing" id="typing-text"></p>
+        </section>
+
+        <section id="message">
+            <h1>My Heart Belongs to You</h1>
+            <p>
+                My dearest Ksesha,<br><br>
+                From the moment I met you, my world changed forever. Your smile lights up my darkest days, 
+                your laugh is my favorite sound, and your love makes me the luckiest person alive.<br><br>
+                Every moment with you feels like a dream I never want to wake from. 
+                You are my best friend, my confidante, and the love of my life.<br><br>
+                Thank you for being you. I promise to love you more every single day.<br><br>
+                Forever yours,<br>
+                Aaren ❤️
+            </p>
+        </section>
+
+        <section id="favourite-section">
+            <h1>My Favourite Things About You</h1>
+            <div class="favourite-cards">
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">Your Eyes ✨</div>
+                        <div class="card-back">
+                            Your eyes are my favorite place to get lost in. They sparkle with kindness, mischief, and so much love. Every time you look at me, I feel like the luckiest guy in the world. I could stare into them forever and never get tired. ❤️
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">Your Personality 🌟</div>
+                        <div class="card-back">
+                            You're the funniest person I know — your humor turns my worst days into the best. You're incredibly smart, always surprising me with your unique view of the world. And you're the most loving person I've ever met — your care makes my heart feel safe and completely full every day.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="this.classList.toggle('flipped')">
+                    <div class="card-inner">
+                        <div class="card-front">Your Beauty 💖</div>
+                        <div class="card-back">
+                            Your beauty takes my breath away every single day — not just how stunning you look, but how beautiful you are inside and out. Your smile lights up entire rooms, and the way you carry yourself with grace makes me fall for you more every time I see you.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="gallery-section">
+            <h1>Our Beautiful Memories</h1>
+            <div class="gallery">
+                <img src="https://i.imgur.com/rMPQTYS.png" alt="Memory 1">
+                <img src="https://i.imgur.com/EHHZAat.png" alt="Memory 2">
+                <img src="https://i.imgur.com/9jXJS1h.png" alt="Memory 3">
+                <img src="https://i.imgur.com/igHk33M.png" alt="Memory 4">
+                <img src="https://i.imgur.com/T2GUygp.png" alt="Memory 5">
+                <img src="https://i.imgur.com/qe7qqVB.png" alt="Memory 6">
+            </div>
+        </section>
+
+        <footer>
+            Made with all my love, just for you ❤️<br>
+            Today and always, I choose you.
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const correctPassword = "imhungy";
+
+            const passwordOverlay = document.getElementById('password-overlay');
+            const gameOverlay = document.getElementById('game-overlay');
+            const content = document.getElementById('content');
+            const gallerySection = document.getElementById('gallery-section');
+            const input = document.getElementById('password-input');
+            const submit = document.getElementById('password-submit');
+            const error = document.getElementById('error-message');
+            const scoreDisplay = document.getElementById('score');
+            const gameContainer = document.getElementById('game-container');
+            const basket = document.getElementById('basket');
+            const gameMessage = document.getElementById('game-message');
+            const music = document.getElementById('background-music');
+
+            input.focus();
+
+            submit.addEventListener('click', () => {
+                if (input.value.trim() === correctPassword) {
+                    passwordOverlay.style.opacity = '0';
+                    passwordOverlay.style.transition = 'opacity 0.8s';
+                    setTimeout(() => {
+                        passwordOverlay.style.display = 'none';
+                        content.style.display = 'block';
+                        gameOverlay.style.display = 'flex';
+                        startAnimations();
+                        startGame();
+                    }, 800);
+                } else {
+                    error.textContent = "Wrong password... try again, my love ❤️";
+                    input.value = '';
+                    input.focus();
+                }
+            });
+
+            input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    submit.click();
+                }
+            });
+
+            let score = 0;
+            let gameInterval;
+
+            function startAnimations() {
+                setInterval(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('heart');
+                    const size = Math.floor(Math.random() * 40 + 30);
+                    heart.style.width = heart.style.height = size + 'px';
+                    heart.style.left = Math.floor(Math.random() * 100) + '%';
+                    heart.style.animationDuration = Math.floor(Math.random() * 10 + 12) + 's';
+                    document.querySelector('.bg_heart').appendChild(heart);
+                    setTimeout(() => heart.remove(), 22000);
+                }, 1000);
+
+                const text = "I love you more than words can say...";
+                let i = 0;
+                const typingElement = document.getElementById('typing-text');
+                function type() {
+                    if (i < text.length) {
+                        typingElement.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(type, 100);
+                    }
+                }
+                setTimeout(type, 800);
+            }
+
+            function startGame() {
+                score = 0;
+                scoreDisplay.textContent = `Caught: ${score} / 5`;
+
+                gameContainer.addEventListener('mousemove', (e) => {
+                    const rect = gameContainer.getBoundingClientRect();
+                    let x = e.clientX - rect.left - 40;
+                    if (x < 0) x = 0;
+                    if (x > rect.width - 80) x = rect.width - 80;
+                    basket.style.left = x + 'px';
+                });
+
+                gameContainer.addEventListener('touchmove', (e) => {
+                    e.preventDefault();
+                    const rect = gameContainer.getBoundingClientRect();
+                    let x = e.touches[0].clientX - rect.left - 40;
+                    if (x < 0) x = 0;
+                    if (x > rect.width - 80) x = rect.width - 80;
+                    basket.style.left = x + 'px';
+                });
+
+                gameInterval = setInterval(() => {
+                    const heart = document.createElement('div');
+                    heart.classList.add('falling-heart');
+                    heart.textContent = '💖';
+                    heart.style.left = Math.random() * (gameContainer.offsetWidth - 40) + 'px';
+                    heart.style.animationDuration = Math.random() * 2 + 3 + 's';
+                    gameContainer.appendChild(heart);
+
+                    const checkCollision = setInterval(() => {
+                        const heartRect = heart.getBoundingClientRect();
+                        const basketRect = basket.getBoundingClientRect();
+                        if (heartRect.bottom >= basketRect.top &&
+                            heartRect.left >= basketRect.left - 30 &&
+                            heartRect.right <= basketRect.right + 30) {
+                            score++;
+                            scoreDisplay.textContent = `Caught: ${score} / 5`;
+                            heart.remove();
+                            clearInterval(checkCollision);
+
+                            if (score >= 5) {
+                                clearInterval(gameInterval);
+                                gameMessage.textContent = "You caught my heart! Here are our memories... 💕";
+                                setTimeout(() => {
+                                    gameOverlay.style.opacity = '0';
+                                    gameOverlay.style.transition = 'opacity 1s';
+                                    setTimeout(() => {
+                                        gameOverlay.style.display = 'none';
+                                        gallerySection.style.display = 'block';
+                                        music.volume = 0.5;
+                                        music.play().catch(() => {});
+                                    }, 1000);
+                                }, 1500);
+                            }
+                        }
+                    }, 50);
+
+                    setTimeout(() => {
+                        if (heart.parentElement) heart.remove();
+                    }, 6000);
+                }, 1200);
+            }
+        });
+    </script>
+</body>
+</html>
